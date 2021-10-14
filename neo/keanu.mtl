@@ -1,0 +1,318 @@
+# Blender MTL File: 'keanu xps.blend'
+# Material Count: 29
+
+newmtl arm_metal
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\a0_001_ma_arms__silverhand_n01.tga
+
+newmtl arm_misc
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.520116 0.393450 0.737574
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\a0_001_ma_arms__silverhand_dec_sticker_d01.tga
+
+newmtl arm_skin
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.707748 0.715160 0.330460
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\a0_001_ma_arms__silverhand_decal_border_d01.tga
+
+newmtl arm_wires
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.728292 0.380152 0.574061
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\a0_001_ma_arms__silverhand_dec_sticker_d01.tga
+
+newmtl beard
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\common\hair\textures\hh_beard01_grad01.tga
+
+newmtl body
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\cyber\basegame_3_nightcity\base\characters\common\base_bodies\man_average\textures\t0_000_ma__c_base_d03.png
+
+newmtl body_tattoo
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t0_001_ma_body__silverhand_tattoo_d01.tga
+
+newmtl dogtags
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\i1_120_neck__dogtags_n01.tga
+
+newmtl eyebrows
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\common\hair\textures\hh_beard01_alpha02.tga
+
+newmtl eyelashes
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\common\hair\textures\hb1_brow_beard_lashes\hb1_01__lash_single_d.tga
+
+newmtl eyes
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\h0_001_ma_c__silverhand\textures\he_001_ma_c__silverhand_d01.tga
+
+newmtl glass
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\h1_001_ma_specs__silverhand_n01.tga
+
+newmtl glass_outer
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\h1_001_ma_specs__silverhand_n01.tga
+
+newmtl hair
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\common\hair\textures\hh_long01_alpha01_r.tga
+
+newmtl hair_scalp
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\hh_050_ma__johnny_silverhand_cap_d02.tga
+
+newmtl head
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.623371 0.566593 0.518614
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\h0_001_ma_c__silverhand\textures\h0_001_ma_c__silverhand_d01.tga
+
+newmtl lace
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\i1_004_ma_wrist__silverhand_lace_n01.tga
+
+newmtl pants
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\l1_001_ma_pants__silverhand_n01.tga
+
+newmtl pants_lines
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\cyber\basegame_3_nightcity\base\vehicles\common\textures\v_common_stitches_n01.png
+
+newmtl pants_misc2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\l1_001_ma_pants__silverhand_n01.tga
+
+newmtl ring
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.524924 0.568117 0.746824
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl shoe
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\silverhand_textures\s1_001_ma_shoe__silverhand_n01.tga
+
+newmtl shoe_misc
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tank
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t1_002_ma_tank__silverhand_n01.tga
+
+newmtl tank_image
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t1_002_ma_tank__silverhand_n01.tga
+
+newmtl tank_lines
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t1_002_ma_tank__silverhand_n01.tga
+
+newmtl teeth
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl vest
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t2_001_ma_vest__silverhand_n01.tga
+
+newmtl vest_strap
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.685822 0.386785 0.670389
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\konra\Desktop\ext\basegame_4_gamedata\base\characters\main_npc\silverhand\textures\t2_001_ma_vest__silverhand_n01.tga
