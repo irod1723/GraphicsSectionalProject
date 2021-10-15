@@ -7,6 +7,9 @@ import { TextGeometry } from './jsm/geometries/TextGeometry.js';
 
 window.onload = main;
 
+const gridW = 50;
+const gridH = 50;
+
 function main()
 {
     const canvas = document.querySelector("#c");
@@ -35,7 +38,7 @@ function main()
     const light2 = new THREE.PointLight(0xFFFFFF, 0.7);
     light2.position.y = 20;
     light2.position.z = 10;
-    scene.add(light);
+    //scene.add(light);
     scene.add(light2);
 
     const controls = new OrbitControls(camera, canvas);
@@ -47,14 +50,14 @@ function main()
 
     let bp;
 
-    const fbx = new FBXLoader();
-    fbx.load('./neo/keanu.fbx', function(loaded) {
-        scene.add(loaded);
-        loaded.scale.set(0.001, 0.001, 0.001);
-        console.log(loaded);
-    }, undefined, (error) => {
-        console.log(error);
-    });
+    // const fbx = new FBXLoader();
+    // fbx.load('./neo/keanu.fbx', function(loaded) {
+    //     scene.add(loaded);
+    //     loaded.scale.set(0.001, 0.001, 0.001);
+    //     console.log(loaded);
+    // }, undefined, (error) => {
+    //     console.log(error);
+    // });
 
     // Load a glTF resource
     loader.load(
@@ -113,7 +116,7 @@ function main()
             curveSegments: 10,
             bevelEnabled: true
         });
-        const mat = new THREE.MeshPhongMaterial({ color: 0x00FF00, specular: 0xFFFFFF, shininess: 100 });
+        const mat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xAAFFAA, shininess: 100 });
         let mesh = new THREE.Mesh(tg, mat);
         mesh.scale.x = 0.01;
         mesh.scale.y = 0.01;
@@ -122,11 +125,15 @@ function main()
         mesh.position.z = -1;
         mesh.position.y = 1;
         scene.add(mesh);
+        
+        let glow = new THREE.PointLight(0x00FF00, 0.9);
+        glow.position.z = -2;
+        scene.add(glow);
 
-        for (var y = 0; y < 15; y++)
+        for (var y = 0; y < gridH; y++)
         {
             grid.push([]);
-            for (var x = 0; x < 15; x++)
+            for (var x = 0; x < gridW; x++)
             {
                 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 let g = new TextGeometry(chars[Math.floor(Math.random() * chars.length)], {
@@ -135,12 +142,12 @@ function main()
                     height: 10,
                     bevelEnabled: false
                 });
-                let mat = new THREE.MeshPhongMaterial({ color: 0x227722 });
+                let mat = new THREE.MeshBasicMaterial({ color: 0x227722 });
                 let m = new THREE.Mesh(g, mat);
                 grid[y].push(m);
                 //grid[y][x] = m;
-                m.position.x = x - 7.5;
-                m.position.y = y - 7.5;
+                m.position.x = x - gridW / 2;
+                m.position.y = y - gridH / 2;
                 m.position.z = -5;
                 m.scale.x = 0.01;
                 m.scale.y = 0.01;
@@ -150,8 +157,6 @@ function main()
             }
         }
 
-        alert("printing");
-        console.log(grid);
 
     });
 
@@ -159,8 +164,9 @@ function main()
     let lastTime = 0;
     let dt = 1.0 / 60.0;
     let offsets = [];
-    for (let i = 0; i < 16; i++)
-        offsets[i] = Math.random() * 16 - 8;
+    let variation = 10.0
+    for (let i = 0; i < gridW; i++)
+        offsets[i] = Math.random() * variation;
     
     function render(time) {
         time *= 0.001;  // convert time to seconds
@@ -170,18 +176,22 @@ function main()
 
         timer += dt;
 
-        if (timer > 0.2)
+        if (timer > 0.1)
         {
-            for (var i = 0; i < 15 * 15; i++)
+            for (var i = 0; i < gridH * gridW; i++)
             {
-                let y = Math.floor(i / 15);
-                if (grid[y] != undefined && grid[y][i%15] != undefined)
+                let y = Math.floor(i / gridW);
+                if (grid[y] != undefined && grid[y][i%gridW] != undefined)
                 {
-                    grid[y][i%15].position.set(Math.floor(Math.random() * 14) - 7.5, Math.floor(Math.random() * 14) - 7.5, -5);
-                    let newX = Math.floor(grid[y][i%15].position.x + 7.5);
-                    let newY = Math.floor(grid[y][i%15].position.y + 7.5);
-                    grid[y][i%15].material.color.g = Math.abs(Math.sin(time + 0.3 * (offsets[newX]) + 0.3 * (newY)));
-                    //console.log("shuffle");
+                    let letter = grid[y][i%gridW];
+                    letter.position.set(Math.floor(Math.random() * (gridW-1)) - gridW/2, Math.floor(Math.random() * (gridH - 1)) - gridH / 2, -5);
+                    let newX = Math.floor(letter.position.x + gridW/2);
+                    let newY = Math.floor(letter.position.y + gridH/2);
+                    let input = time + 0.1 * newY + offsets[newX];
+                    let intensity = Math.max(1 - Math.pow(input %= 5, 4), 0);
+                    letter.material.color.g = intensity;
+                    letter.material.color.r = 0.3 * Math.pow(intensity, 2);
+                    letter.material.color.b = 0.25 * letter.material.color.r;
                 }
             }
             timer = 0;
