@@ -51,9 +51,10 @@ function main()
 
     document.querySelector("#fps").addEventListener("click", (event) => {
         controls.dispose();
+        controls = null;
         controls = new FirstPersonControls(camera, canvas);
-        //controls.lookSpeed(50.0);
-        //controls.movementSpeed = 3.0;
+        controls.lookSpeed = 0.1;
+        controls.movementSpeed = 3.0;
     });
 
     document.querySelector("#orbit").addEventListener("click", (event) => {
