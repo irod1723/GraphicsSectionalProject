@@ -4,6 +4,7 @@ import { FBXLoader } from './jsm/loaders/FBXLoader.js'
 import { OrbitControls } from './jsm/controls/OrbitControls.js';
 import { FontLoader } from './jsm/loaders/FontLoader.js';
 import { TextGeometry } from './jsm/geometries/TextGeometry.js';
+import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 
 window.onload = main;
 
@@ -14,7 +15,7 @@ function main()
 {
     const canvas = document.querySelector("#c");
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight * 0.8;
 
     const renderer = new THREE.WebGLRenderer({canvas});
 
@@ -41,23 +42,28 @@ function main()
     //scene.add(light);
     scene.add(light2);
 
-    const controls = new OrbitControls(camera, canvas);
+    let controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 0, 0);
     controls.update();
 
     // Instantiate a loader
     const loader = new GLTFLoader();
 
-    let bp;
+    document.querySelector("#fps").addEventListener("click", (event) => {
+        controls.dispose();
+        controls = new FirstPersonControls(camera, canvas);
+        //controls.lookSpeed(50.0);
+        //controls.movementSpeed = 3.0;
+    });
 
-    // const fbx = new FBXLoader();
-    // fbx.load('./neo/keanu.fbx', function(loaded) {
-    //     scene.add(loaded);
-    //     loaded.scale.set(0.001, 0.001, 0.001);
-    //     console.log(loaded);
-    // }, undefined, (error) => {
-    //     console.log(error);
-    // });
+    document.querySelector("#orbit").addEventListener("click", (event) => {
+        controls.dispose();
+        controls = new OrbitControls(camera, canvas);
+        controls.target.set(0, 0, 0);
+        controls.update();
+    });
+
+    let bp;
 
     // Load a glTF resource
     loader.load(
@@ -175,6 +181,8 @@ function main()
         lastTime = time;
 
         timer += dt;
+
+        controls.update(dt)
 
         if (timer > 0.1)
         {
