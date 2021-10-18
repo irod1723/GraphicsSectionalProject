@@ -17,7 +17,8 @@ function main()
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight * 0.8;
 
-    const renderer = new THREE.WebGLRenderer({canvas});
+    // depth parameter controls if there is a depth buffer enabled for depth testing
+    const renderer = new THREE.WebGLRenderer({canvas: canvas, depth: true});
 
     const scene = new THREE.Scene();
 
@@ -39,7 +40,7 @@ function main()
     const light2 = new THREE.PointLight(0xFFFFFF, 0.7);
     light2.position.y = 20;
     light2.position.z = 10;
-    //scene.add(light);
+    scene.add(light);
     scene.add(light2);
 
     let controls = new OrbitControls(camera, canvas);
@@ -86,17 +87,9 @@ function main()
             let pill = s2.getObjectByName("Cylinder");
             pill.material = new THREE.MeshPhongMaterial({ color: 0x0000FF });
             scene.add(s2);
-            console.log(s2);
             pill.position.y += 0.01;
 
             bp = pill;
-
-            gltf.animations; // Array<THREE.AnimationClip>
-            gltf.scene; // THREE.Group
-            gltf.scenes; // Array<THREE.Group>
-            gltf.cameras; // Array<THREE.Camera>
-            gltf.asset; // Object
-
         },
         // called while loading is progressing
         function ( xhr ) {
@@ -125,6 +118,10 @@ function main()
         });
         const mat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xAAFFAA, shininess: 100 });
         let mesh = new THREE.Mesh(tg, mat);
+
+        document.querySelector("#depth").addEventListener("click", (event) => {
+            mat.depthTest = !mat.depthTest;
+        });
         mesh.scale.x = 0.01;
         mesh.scale.y = 0.01;
         mesh.scale.z = 0.01;
@@ -192,6 +189,7 @@ function main()
                 let y = Math.floor(i / gridW);
                 if (grid[y] != undefined && grid[y][i%gridW] != undefined)
                 {
+
                     let letter = grid[y][i%gridW];
                     letter.position.set(Math.floor(Math.random() * (gridW-1)) - gridW/2, Math.floor(Math.random() * (gridH - 1)) - gridH / 2, -5);
                     let newX = Math.floor(letter.position.x + gridW/2);
