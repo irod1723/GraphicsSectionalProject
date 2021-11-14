@@ -44,11 +44,26 @@ function main()
     // Perspective based camera that applies perspective projections
     // This camera will apply a perspective projection with an fov of 75 degrees with near/far planes at 0.1 and 1000
     const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
+    let boxOrbit = false;
+    let mixer;
+    let animSpeed = 1.0;
 
     camera.position.z = 5;
 
+    let cubeLoader = new THREE.CubeTextureLoader();
+
+    scene.background = cubeLoader.load([
+		'neo.png',
+		'neo.png',
+		'neo.png',
+		'Smith.png',
+		'neo.png',
+		'neo.png'
+	]);
+
     // the texture for the Neo cube
-    const texture = new THREE.TextureLoader().load( 'neo.jpg' );
+    let textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load( 'neo.png' );
 
     // makes the Neo cube
     const geometry = new THREE.BoxGeometry();
@@ -76,6 +91,62 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
+    loader.load(
+        // resource URL
+        'cube.gltf',
+        // called when the resource is loaded
+        function ( gltf ) {
+            let newCube = gltf.scene.getObjectByName("Cube");
+
+            var vertShader = `
+            varying vec2 vUv;
+            void main()
+            {
+                vUv = uv;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+            `;
+            var fragShader = `
+            uniform sampler2D tOne;
+            uniform sampler2D tSec;
+            
+            varying vec2 vUv;
+            
+            void main(void)
+            {
+                vec3 c;
+                vec4 Ca = texture2D(tOne, vUv);
+                vec4 Cb = texture2D(tSec, vUv);
+                c = Ca.rgb * Ca.a + Cb.rgb * Cb.a;  // blending equation
+                gl_FragColor= vec4(c, 1.0);
+            }`;
+            
+            var uniforms = {    // custom uniforms (your textures)
+                tOne: { type: "t", value: textureLoader.load( 'neoBox.png' ) },
+                tSec: { type: "t", value: textureLoader.load( 'smithBox.png' ) }
+            };
+            
+            var boxMaterial = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: vertShader,
+                fragmentShader: fragShader
+            });
+
+            newCube.scale.y = -1;
+            newCube.material = boxMaterial;
+            scene.add(newCube);
+        },
+        // called while loading is progressing
+        function ( xhr ) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        },
+        // called when loading has errors
+        function ( error ) {
+            console.log( 'An error happened' );
+        }
+    );
+
     // this hook up the buttons that toggle the camera controls
     document.querySelector("#fps").addEventListener("click", (event) => {
         // sets a first person camera control
@@ -94,8 +165,61 @@ function main()
         controls.update();
     });
 
+    document.querySelector("#box").addEventListener("click", (event) => {
+        boxOrbit = !boxOrbit;
+    });
+
+    let playback = document.querySelector("#playback");
+    playback.oninput = () => {
+        console.log(playback.value);
+        animSpeed = playback.value;
+    };
+
 
     let bp;
+    let curve1 = new THREE.CubicBezierCurve3(
+        new THREE.Vector3( -10, 0, 2 ),
+        new THREE.Vector3( -5, 15, 1 ),
+        new THREE.Vector3( 20, 15, -1 ),
+        new THREE.Vector3( 10, 0, -3 )
+    );
+    let curve2 = new THREE.CubicBezierCurve3(
+        new THREE.Vector3( 10, 0, -3 ),
+        new THREE.Vector3( 5, 15, -5 ),
+        new THREE.Vector3( 20, 5, 4 ),
+        new THREE.Vector3( 4, 3, 3 )
+    );
+    let curve3 = new THREE.CubicBezierCurve3(
+        new THREE.Vector3( 4, 3, 3 ),
+        new THREE.Vector3( -5, 5, 2 ),
+        new THREE.Vector3( -15, 10, 1),
+        new THREE.Vector3( 0, 10, 0 )
+    );
+
+    let curve = new THREE.CurvePath();
+    curve.add(curve1);
+    curve.add(curve2);
+    curve.add(curve3);
+
+    const points = curve.getPoints( 50 );
+
+    loader.load(
+        'neo.gltf',
+        function (gltf) {
+            gltf.scene.position.y += 1.5;
+            mixer = new THREE.AnimationMixer(gltf.scene);
+            mixer.clipAction(gltf.animations[0]).play();
+            scene.add(gltf.scene);
+            
+        },
+        function (xhr) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% of Neo loaded' );
+        },
+        function (error)
+        {
+            console.log(error);
+        }
+    )
 
     // Load a glTF resource
     // Loads our gltf scene file (the hand and pill) and adds it into the scene
@@ -125,6 +249,15 @@ function main()
             pill.position.y += 0.01;
 
             bp = pill;
+            
+            const curveGeometry = new THREE.BufferGeometry().setFromPoints( points );
+            
+            const curveMat = new THREE.LineBasicMaterial( { color : 0x00FF00 } );
+            
+            // Create the final object to add to the scene
+            const curveObject = new THREE.Line( curveGeometry, curveMat );
+
+            scene.add(curveObject);
         },
         // called while loading is progressing
         function ( xhr ) {
@@ -275,8 +408,26 @@ function main()
 
         // rotate objects in the scene
         cube.rotation.y = time;
+
+        const pathTime = 20.0;
+        let newPos = curve.getPoint((time % pathTime) / pathTime);
+        cube.position.x = newPos.x;
+        cube.position.y = newPos.y;
+        cube.position.z = newPos.z;
+
+        if (controls.target != undefined)
+        {
+            if (boxOrbit)
+                controls.target = cube.position;
+            else
+                controls.target.set(0,0,0);
+        }
+
         if (bp != undefined)
             bp.rotation.y = time * 0.4;
+
+        if (mixer != undefined)
+            mixer.update(dt * animSpeed);
 
         // render the scene
         renderer.render(scene, camera);
