@@ -91,13 +91,14 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
+    //creates center cube with multitexturing using cubemaps
     loader.load(
         // resource URL
         'cube.gltf',
         // called when the resource is loaded
         function ( gltf ) {
             let newCube = gltf.scene.getObjectByName("Cube");
-
+            //general vertex shader used in ShaderMaterial()
             var vertShader = `
             varying vec2 vUv;
             void main()
@@ -107,6 +108,7 @@ function main()
                 gl_Position = projectionMatrix * mvPosition;
             }
             `;
+            //general fragment shader used in ShaderMaterial(), displays two textures at 50% opacity
             var fragShader = `
             uniform sampler2D tOne;
             uniform sampler2D tSec;
@@ -121,18 +123,18 @@ function main()
                 c = Ca.rgb * Ca.a + Cb.rgb * Cb.a;  // blending equation
                 gl_FragColor= vec4(c, 1.0);
             }`;
-            
+            //textures to be included in ShaderMaterial()
             var uniforms = {    // custom uniforms (your textures)
                 tOne: { type: "t", value: textureLoader.load( 'neoBox.png' ) },
                 tSec: { type: "t", value: textureLoader.load( 'smithBox.png' ) }
             };
-            
+            //create material for the incoming cube
             var boxMaterial = new THREE.ShaderMaterial({
                 uniforms: uniforms,
                 vertexShader: vertShader,
                 fragmentShader: fragShader
             });
-
+            //flip textures, apply created material to cube, add cube to scene
             newCube.scale.y = -1;
             newCube.material = boxMaterial;
             scene.add(newCube);
@@ -166,10 +168,12 @@ function main()
     });
 
     document.querySelector("#box").addEventListener("click", (event) => {
+        //follows the box along the bezier curve
         boxOrbit = !boxOrbit;
     });
 
     let playback = document.querySelector("#playback");
+    //slider to adjust animation speed for neo model
     playback.oninput = () => {
         console.log(playback.value);
         animSpeed = playback.value;
@@ -177,6 +181,8 @@ function main()
 
 
     let bp;
+
+    //create three curves using Bezier Curve function by passing in coordinates
     let curve1 = new THREE.CubicBezierCurve3(
         new THREE.Vector3( -10, 0, 2 ),
         new THREE.Vector3( -5, 15, 1 ),
@@ -196,21 +202,26 @@ function main()
         new THREE.Vector3( 0, 10, 0 )
     );
 
+    //add all three curves to make a full bezier curve
     let curve = new THREE.CurvePath();
     curve.add(curve1);
     curve.add(curve2);
     curve.add(curve3);
 
+    //samples 50 points from the curve to create the mesh
     const points = curve.getPoints( 50 );
 
+    //loads Neo model
     loader.load(
         'neo.gltf',
         function (gltf) {
+            //when loading into the scene, lift neo up 1.5 units
             gltf.scene.position.y += 1.5;
+            //add animations from .gltf files
             mixer = new THREE.AnimationMixer(gltf.scene);
             mixer.clipAction(gltf.animations[0]).play();
+            //add Neo to scene
             scene.add(gltf.scene);
-            
         },
         function (xhr) {
             console.log( ( xhr.loaded / xhr.total * 100 ) + '% of Neo loaded' );
