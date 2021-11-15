@@ -50,20 +50,20 @@ function main()
 
     camera.position.z = 5;
 
-    let cubeLoader = new THREE.CubeTextureLoader();
+    //let cubeLoader = new THREE.CubeTextureLoader();
 
-    scene.background = cubeLoader.load([
-		'neo.png',
-		'neo.png',
-		'neo.png',
-		'Smith.png',
-		'neo.png',
-		'neo.png'
-	]);
+    // scene.background = cubeLoader.load([
+	// 	'neo.png',
+	// 	'neo.png',
+	// 	'neo.png',
+	// 	'Smith.png',
+	// 	'neo.png',
+	// 	'neo.png'
+	// ]);
 
     // the texture for the Neo cube
     let textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load( 'neo.png' );
+    const texture = textureLoader.load( 'Smith.png' );
 
     // makes the Neo cube
     const geometry = new THREE.BoxGeometry();
@@ -418,7 +418,7 @@ function main()
         if (controls.target != undefined)
         {
             if (boxOrbit)
-                controls.target = cube.position;
+                controls.target = cube.position.clone();
             else
                 controls.target.set(0,0,0);
         }
