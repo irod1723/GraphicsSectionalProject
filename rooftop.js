@@ -137,7 +137,7 @@ function main()
         const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
-        cylinder.position.x = -3 + x/4;
+        cylinder.position.x = (Math.random()*6) - 3;
         cylinder.position.y = 1 + (row%5)/5;
         cylinder.position.z = (Math.random()*100)%20;
         cylinder.rotation.x = 90 * Math.PI / 180;
@@ -149,12 +149,6 @@ function main()
     let timer = 0;
     let lastTime = 0;
     let dt = 1.0 / 60.0;
-
-    // variables to control the randomness in text streaking effect
-    let offsets = [];
-    let variation = 10.0
-    for (let i = 0; i < gridW; i++)
-        offsets[i] = Math.random() * variation;
     
     // the render loop
     function render(time) {
