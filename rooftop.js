@@ -50,16 +50,16 @@ function main()
 
     camera.position.z = 5;
 
-    //let cubeLoader = new THREE.CubeTextureLoader();
+    let cubeLoader = new THREE.CubeTextureLoader();
 
-    // scene.background = cubeLoader.load([
-	// 	'neo.png',
-	// 	'neo.png',
-	// 	'neo.png',
-	// 	'Smith.png',
-	// 	'neo.png',
-	// 	'neo.png'
-	// ]);
+     scene.background = cubeLoader.load([
+	 	'SkyRight.bmp',
+	 	'SkyLeft.bmp',
+	 	'SkyTop.bmp',
+	 	'SkyBottom.bmp',
+	 	'SkyFront.bmp',
+	 	'SkyBack.bmp'
+	]);
 
     // the texture for the Neo cube
     let textureLoader = new THREE.TextureLoader();
