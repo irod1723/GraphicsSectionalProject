@@ -35,9 +35,21 @@ function main()
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight * 0.8;
 
+    const mousePos = new THREE.Vector2();
+
+    // stores the mouse position in NDC
+    function onMouseMove(event)
+    {
+        mousePos.x = (event.clientX / canvas.width) * 2 - 1;
+        mousePos.y = -(event.clientY / canvas.height) * 2 + 1;
+    }
+  
+    canvas.addEventListener('mousemove', onMouseMove, false);
+
     // depth parameter controls if there is a depth buffer enabled for depth testing
     // By default, ThreeJS has depth testing enabled since that's typically what you want when rendering in 3D, however it can be disabled on a per material basis as you'll see later (line 155)
     const renderer = new THREE.WebGLRenderer({canvas: canvas, depth: true});
+    const raycaster = new THREE.Raycaster();
 
     const scene = new THREE.Scene();
 
@@ -71,6 +83,8 @@ function main()
     const cube = new THREE.Mesh( geometry, material );
     cube.position.y = -1;
     scene.add( cube );
+
+    let pills = [];
 
     // adds a white point and ambient light to the scene to illuminate objects
     // The ambient light adds a small amount of ambient color to all the phong materials in the scene, providing some subtle background illumination
@@ -244,6 +258,7 @@ function main()
             gltf.scene.scale.set(20, 20, 20);
             gltf.scene.rotation.set(0.3, -Math.PI - 0.4, 0);
             gltf.scene.position.set(2, 0, 0);
+            let rp = gltf.scene.getObjectByName("Cylinder");
 
             // mirror the one hand we loaded and make its pill blue
 
@@ -253,13 +268,16 @@ function main()
             s2.rotation.y -= 0.8;
 
             let pill = s2.getObjectByName("Cylinder");
-
+            
             // here, we are making the clone of the red pill into a blue one, and we do this by updating the material (into a phong material with blue diffuse). 
             pill.material = new THREE.MeshPhongMaterial({ color: 0x0000FF });
             scene.add(s2);
             pill.position.y += 0.01;
-
+            
             bp = pill;
+            pills.push(rp);
+            pills.push(bp);
+
             
             const curveGeometry = new THREE.BufferGeometry().setFromPoints( points );
             
@@ -440,13 +458,27 @@ function main()
         if (mixer != undefined)
             mixer.update(dt * animSpeed);
 
+        raycaster.setFromCamera(mousePos, camera);
+
+        if (pills.length > 0)
+        {
+            const intersects = raycaster.intersectObjects(pills);
+            
+            pills[0].scale.set(1, 1, 1);
+            pills[1].scale.set(1, 1, 1);
+            for (let i = 0; i < intersects.length; i++)
+            {
+                console.log(intersects[i]);
+                intersects[i].object.scale.set(3, 3, 3);
+            }
+        }
+
         // render the scene
         renderer.render(scene, camera);
     
         // request another frame of animation
         requestAnimationFrame(render);
     }
-
     // beings the render loop
     requestAnimationFrame(render);
 
