@@ -125,11 +125,11 @@ function main()
     )
 
     let bullets = [];
-    const bulletCount = 50;
+    const bulletCount = 100;
     var row = 0;
     for(var x = 0; x < bulletCount; x++)
     {
-        const geometry = new THREE.CylinderGeometry(0.04, 0.06, 0.2, 8);
+        const geometry = new THREE.CylinderGeometry(0.02, 0.03, 0.1, 8);
         const material = new THREE.MeshPhongMaterial( {color: 0x555555 , specular: 0xFFFFFF, shininess: 100} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);

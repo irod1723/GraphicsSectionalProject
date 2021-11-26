@@ -36,6 +36,7 @@ function main()
     canvas.height = window.innerHeight * 0.8;
 
     const mousePos = new THREE.Vector2();
+    let selected = null;
 
     // stores the mouse position in NDC
     function onMouseMove(event)
@@ -43,8 +44,18 @@ function main()
         mousePos.x = (event.clientX / canvas.width) * 2 - 1;
         mousePos.y = -(event.clientY / canvas.height) * 2 + 1;
     }
+
+    function onClick(event)
+    {
+        if (selected != null)
+        {
+            if (selected == "red")
+                window.location.href = "http://localhost/rooftop.html";
+        }
+    }
   
     canvas.addEventListener('mousemove', onMouseMove, false);
+    canvas.addEventListener('click', onClick, false);
 
     // depth parameter controls if there is a depth buffer enabled for depth testing
     // By default, ThreeJS has depth testing enabled since that's typically what you want when rendering in 3D, however it can be disabled on a per material basis as you'll see later (line 155)
@@ -466,10 +477,19 @@ function main()
             
             pills[0].scale.set(1, 1, 1);
             pills[1].scale.set(1, 1, 1);
+            selected = null;
             for (let i = 0; i < intersects.length; i++)
             {
-                console.log(intersects[i]);
+                if (intersects[i].object == pills[0])
+                {
+                    selected = "red";
+                }
+                else
+                {
+                    selected = "blue";
+                }
                 intersects[i].object.scale.set(3, 3, 3);
+
             }
         }
 
