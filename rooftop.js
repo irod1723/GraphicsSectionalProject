@@ -129,11 +129,11 @@ function main()
     )
 
     let bullets = [];
-    const bulletCount = 25;
+    const bulletCount = 250;
     var row = 0;
     for(var x = 0; x < bulletCount; x++)
     {
-        const geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.2, 8);
+        const geometry = new THREE.CylinderGeometry(0.025, 0.025, 0.05, 8);
         const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
@@ -165,7 +165,7 @@ function main()
         const bulletSpeed = 2.5;
         for(var x = 0; x < bulletCount; x++) {
             bullets[x].position.z += bulletSpeed * animSpeed * dt;
-            bullets[x].position.z %= 20;
+            bullets[x].position.z %= 17.5;
         }
 
         // update the effect every 0.1 seconds
