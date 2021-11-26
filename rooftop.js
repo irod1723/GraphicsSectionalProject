@@ -70,10 +70,10 @@ function main()
     const material = new THREE.MeshBasicMaterial();
     material.color.set(0x84522D);
     const cube = new THREE.Mesh( geometry, material );
-    cube.position.y = -9;
-    cube.position.z = 5;
-    cube.scale.x  = 12.5;
-    cube.scale.y  = 21;
+    cube.position.y = -10;
+    cube.position.z = 7.25;
+    cube.scale.x  = 7.5;
+    cube.scale.y  = 20;
     cube.scale.z  = 15;
     scene.add( cube );
 
@@ -126,15 +126,14 @@ function main()
         animSpeed = playback.value;
     };
 
-
     let bp;
 
     //loads Neo model
     loader.load(
         'neo.gltf',
         function (gltf) {
-            //when loading into the scene, lift neo up 1.5 units
-            gltf.scene.position.y += 1.5;
+            gltf.scene.position.z = 14.5;
+            gltf.scene.scale.z = -1;
             //add animations from .gltf files
             mixer = new THREE.AnimationMixer(gltf.scene);
             mixer.clipAction(gltf.animations[0]).play();
@@ -149,6 +148,23 @@ function main()
             console.log(error);
         }
     )
+
+    let bullets = [];
+    const bulletCount = 25;
+    var row = 0;
+    for(var x = 0; x < bulletCount; x++)
+    {
+        const geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.2, 8);
+        const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+        const cylinder = new THREE.Mesh( geometry, material );
+        scene.add(cylinder);
+        cylinder.position.x = -3 + x/4;
+        cylinder.position.y = 1 + (row%5)/5;
+        cylinder.position.z = (Math.random()*100)%20;
+        cylinder.rotation.x = 90 * Math.PI / 180;
+        row++;
+        bullets.push(cylinder);
+    }
 
     // timers and delta-time for the text streaking effect
     let timer = 0;
@@ -172,6 +188,12 @@ function main()
         timer += dt;
 
         controls.update(dt)
+
+        const bulletSpeed = 2.5;
+        for(var x = 0; x < bulletCount; x++) {
+            bullets[x].position.z += bulletSpeed * animSpeed * dt;
+            bullets[x].position.z %= 20;
+        }
 
         // update the effect every 0.1 seconds
         if (timer > 0.1)
