@@ -161,7 +161,7 @@ function main()
         const bulletSpeed = 2.5;
         for(var x = 0; x < bulletCount; x++) {
             bullets[x].position.z += bulletSpeed * animSpeed * dt;
-            bullets[x].position.z %= 20;
+            bullets[x].position.z %= 17.5;
         }
 
         // update the effect every 0.1 seconds
