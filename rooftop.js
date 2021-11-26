@@ -67,9 +67,13 @@ function main()
 
     // makes the Neo cube
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial( { map: texture } );
+    const material = new THREE.MeshBasicMaterial();
+    material.color.set(0x84522D);
     const cube = new THREE.Mesh( geometry, material );
-    cube.position.y = -1;
+    cube.position.y = -9;
+    cube.scale.x  = 15;
+    cube.scale.y  = 21;
+    cube.scale.z  = 25;
     scene.add( cube );
 
     // adds a white point and ambient light to the scene to illuminate objects
