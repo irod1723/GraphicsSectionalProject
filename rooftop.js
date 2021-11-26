@@ -71,9 +71,10 @@ function main()
     material.color.set(0x84522D);
     const cube = new THREE.Mesh( geometry, material );
     cube.position.y = -9;
-    cube.scale.x  = 15;
+    cube.position.z = 5;
+    cube.scale.x  = 12.5;
     cube.scale.y  = 21;
-    cube.scale.z  = 25;
+    cube.scale.z  = 15;
     scene.add( cube );
 
     // adds a white point and ambient light to the scene to illuminate objects
