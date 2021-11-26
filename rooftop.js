@@ -1,7 +1,7 @@
 /* CIS 454 Group 6
- * Sectional project 3
- * main.js
- * contains all of our rendering code
+ * Final Project
+ * rooftop.js
+ * contains all of our rendering code for the rooftop scene
  * utilizes the ThreeJS library for WebGL rendering
  */
 
@@ -17,11 +17,7 @@
 
 import * as THREE from './build/three.module.js';
 import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-import { FBXLoader } from './jsm/loaders/FBXLoader.js'
 import { OrbitControls } from './jsm/controls/OrbitControls.js';
-import { FontLoader } from './jsm/loaders/FontLoader.js';
-import { TextGeometry } from './jsm/geometries/TextGeometry.js';
-import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 
 window.onload = main;
 
@@ -68,7 +64,7 @@ function main()
     // makes the Neo cube
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial();
-    material.color.set(0x84522D);
+    material.color.set(0x63512D);
     const cube = new THREE.Mesh( geometry, material );
     cube.position.y = -10;
     cube.position.z = 7.25;
@@ -79,7 +75,7 @@ function main()
 
     // adds a white point and ambient light to the scene to illuminate objects
     // The ambient light adds a small amount of ambient color to all the phong materials in the scene, providing some subtle background illumination
-    const color = 0xFF00FF;
+    const color = 0xFFFFFF;
     const light = new THREE.AmbientLight(color, 0.1);
     const light2 = new THREE.PointLight(0xFFFFFF, 0.7);
     light2.position.y = 20;
@@ -129,12 +125,12 @@ function main()
     )
 
     let bullets = [];
-    const bulletCount = 25;
+    const bulletCount = 50;
     var row = 0;
     for(var x = 0; x < bulletCount; x++)
     {
-        const geometry = new THREE.CylinderGeometry(0.1, 0.1, 0.2, 8);
-        const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+        const geometry = new THREE.CylinderGeometry(0.04, 0.06, 0.2, 8);
+        const material = new THREE.MeshPhongMaterial( {color: 0x555555 , specular: 0xFFFFFF, shininess: 100} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
         cylinder.position.x = (Math.random()*6) - 3;
