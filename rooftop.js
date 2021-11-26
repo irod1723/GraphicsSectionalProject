@@ -96,29 +96,6 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
-    // this hook up the buttons that toggle the camera controls
-    document.querySelector("#fps").addEventListener("click", (event) => {
-        // sets a first person camera control
-        controls.dispose();
-        controls = null;
-        controls = new FirstPersonControls(camera, canvas);
-        controls.lookSpeed = 0.1;
-        controls.movementSpeed = 3.0;
-    });
-
-    document.querySelector("#orbit").addEventListener("click", (event) => {
-        // sets an orbiting camera control
-        controls.dispose();
-        controls = new OrbitControls(camera, canvas);
-        controls.target.set(0, 0, 0);
-        controls.update();
-    });
-
-    document.querySelector("#box").addEventListener("click", (event) => {
-        //follows the box along the bezier curve
-        boxOrbit = !boxOrbit;
-    });
-
     let playback = document.querySelector("#playback");
     //slider to adjust animation speed for neo model
     playback.oninput = () => {
@@ -132,8 +109,10 @@ function main()
     loader.load(
         'neo.gltf',
         function (gltf) {
-            gltf.scene.position.z = 14.5;
+            gltf.scene.position.z = 12.5;
             gltf.scene.scale.z = -1;
+
+            controls.target = gltf.scene.position;
             //add animations from .gltf files
             mixer = new THREE.AnimationMixer(gltf.scene);
             mixer.clipAction(gltf.animations[0]).play();
@@ -199,14 +178,6 @@ function main()
         if (timer > 0.1)
         {
             timer = 0;
-        }
-
-        if (controls.target != undefined)
-        {
-            if (boxOrbit)
-                controls.target = cube.position.clone();
-            else
-                controls.target.set(0,0,0);
         }
 
         if (bp != undefined)
