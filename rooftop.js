@@ -91,64 +91,6 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
-    //creates center cube with multitexturing using cubemaps
-    loader.load(
-        // resource URL
-        'cube.gltf',
-        // called when the resource is loaded
-        function ( gltf ) {
-            let newCube = gltf.scene.getObjectByName("Cube");
-            //general vertex shader used in ShaderMaterial()
-            var vertShader = `
-            varying vec2 vUv;
-            void main()
-            {
-                vUv = uv;
-                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                gl_Position = projectionMatrix * mvPosition;
-            }
-            `;
-            //general fragment shader used in ShaderMaterial(), displays two textures at 50% opacity
-            var fragShader = `
-            uniform sampler2D tOne;
-            uniform sampler2D tSec;
-            
-            varying vec2 vUv;
-            
-            void main(void)
-            {
-                vec3 c;
-                vec4 Ca = texture2D(tOne, vUv);
-                vec4 Cb = texture2D(tSec, vUv);
-                c = Ca.rgb * Ca.a + Cb.rgb * Cb.a;  // blending equation
-                gl_FragColor= vec4(c, 1.0);
-            }`;
-            //textures to be included in ShaderMaterial()
-            var uniforms = {    // custom uniforms (your textures)
-                tOne: { type: "t", value: textureLoader.load( 'neoBox.png' ) },
-                tSec: { type: "t", value: textureLoader.load( 'smithBox.png' ) }
-            };
-            //create material for the incoming cube
-            var boxMaterial = new THREE.ShaderMaterial({
-                uniforms: uniforms,
-                vertexShader: vertShader,
-                fragmentShader: fragShader
-            });
-            //flip textures, apply created material to cube, add cube to scene
-            newCube.scale.y = -1;
-            newCube.material = boxMaterial;
-            scene.add(newCube);
-        },
-        // called while loading is progressing
-        function ( xhr ) {
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-        },
-        // called when loading has errors
-        function ( error ) {
-            console.log( 'An error happened' );
-        }
-    );
-
     // this hook up the buttons that toggle the camera controls
     document.querySelector("#fps").addEventListener("click", (event) => {
         // sets a first person camera control
@@ -182,35 +124,6 @@ function main()
 
     let bp;
 
-    //create three curves using Bezier Curve function by passing in coordinates
-    let curve1 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( -10, 0, 2 ),
-        new THREE.Vector3( -5, 15, 1 ),
-        new THREE.Vector3( 20, 15, -1 ),
-        new THREE.Vector3( 10, 0, -3 )
-    );
-    let curve2 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( 10, 0, -3 ),
-        new THREE.Vector3( 5, 15, -5 ),
-        new THREE.Vector3( 20, 5, 4 ),
-        new THREE.Vector3( 4, 3, 3 )
-    );
-    let curve3 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( 4, 3, 3 ),
-        new THREE.Vector3( -5, 5, 2 ),
-        new THREE.Vector3( -15, 10, 1),
-        new THREE.Vector3( 0, 10, 0 )
-    );
-
-    //add all three curves to make a full bezier curve
-    let curve = new THREE.CurvePath();
-    curve.add(curve1);
-    curve.add(curve2);
-    curve.add(curve3);
-
-    //samples 50 points from the curve to create the mesh
-    const points = curve.getPoints( 50 );
-
     //loads Neo model
     loader.load(
         'neo.gltf',
@@ -231,136 +144,6 @@ function main()
             console.log(error);
         }
     )
-
-    // Load a glTF resource
-    // Loads our gltf scene file (the hand and pill) and adds it into the scene
-    loader.load(
-        // resource URL
-        'scene.gltf',
-        // called when the resource is loaded
-        function ( gltf ) {
-
-            scene.add( gltf.scene );
-            gltf.scene.scale.set(20, 20, 20);
-            gltf.scene.rotation.set(0.3, -Math.PI - 0.4, 0);
-            gltf.scene.position.set(2, 0, 0);
-
-            // mirror the one hand we loaded and make its pill blue
-
-            let s2 = gltf.scene.clone(true);
-            s2.scale.x = -20;
-            s2.position.x = -2;
-            s2.rotation.y -= 0.8;
-
-            let pill = s2.getObjectByName("Cylinder");
-
-            // here, we are making the clone of the red pill into a blue one, and we do this by updating the material (into a phong material with blue diffuse). 
-            pill.material = new THREE.MeshPhongMaterial({ color: 0xFF00FF });
-            scene.add(s2);
-            pill.position.y += 0.01;
-
-            bp = pill;
-            
-            const curveGeometry = new THREE.BufferGeometry().setFromPoints( points );
-            
-            const curveMat = new THREE.LineBasicMaterial( { color : 0x00FF00 } );
-            
-            // Create the final object to add to the scene
-            const curveObject = new THREE.Line( curveGeometry, curveMat );
-
-            scene.add(curveObject);
-        },
-        // called while loading is progressing
-        function ( xhr ) {
-
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-        },
-        // called when loading has errors
-        function ( error ) {
-
-            console.log( 'An error happened' );
-
-        }
-    );
-
-    // the array for the background grid
-    let grid = [];
-
-    // used to load the font
-    const fl = new FontLoader();
-    fl.load('Matrix_Regular.json', (font) => {
-        // generate a text mesh that says THE MATRIX
-        const tg = new TextGeometry('THE MATRIX', {
-            font: font,
-            size: 80,
-            height: 50,
-            curveSegments: 10,
-            bevelEnabled: true
-        });
-
-        // The material used for THE MATRIX logo. This is a MeshPhongMaterial provided by ThreeJS. MeshPhongMaterial objects implement the Blinn-Phong lighting model.
-        // Here, we assign the logo to have a white diffuse color, a very bright green specular highlight, and a high shininess constant
-        // Since ThreeJS provides its own shaders and implements the Blinn-Phong model internally, our codebase at no point ever interfaces with the halfway vector or shaders in general, however the model internally uses it to approximate speculars 
-        const mat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xAAFFAA, shininess: 100 });
-        let mesh = new THREE.Mesh(tg, mat);
-
-        // hooks up the button to toggle depth testing 
-        // This toggles the depth testing for the material of THE MATRIX logo. Disabling depth testing causes objects behind it to render in front of it and breaks the illusion of depth. 
-        // Internally, ThreeJS is using a depth / z buffer to do this depth testing, however we never need to interact with it directly, only request it be enabled or disabled
-        document.querySelector("#depth").addEventListener("click", (event) => {
-            mat.depthTest = !mat.depthTest;
-        });
-
-        // some sizing stuff, it was WAAAY too big
-
-        mesh.scale.x = 0.01;
-        mesh.scale.y = 0.01;
-        mesh.scale.z = 0.01;
-        mesh.position.x = -4;
-        mesh.position.z = -1;
-        mesh.position.y = 1;
-        scene.add(mesh);
-        
-        // adds a green pointlight behind the logo
-
-        let glow = new THREE.PointLight(0x00FF00, 0.9);
-        glow.position.z = -2;
-        scene.add(glow);
-
-
-
-        // generate the procedural grid of characters randomly
-
-        for (var y = 0; y < gridH; y++)
-        {
-            grid.push([]);
-            for (var x = 0; x < gridW; x++)
-            {
-                const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                let g = new TextGeometry(chars[Math.floor(Math.random() * chars.length)], {
-                    font: font,
-                    size: 40,
-                    height: 10,
-                    bevelEnabled: false
-                });
-                let mat = new THREE.MeshBasicMaterial({ color: 0x227722 });
-                let m = new THREE.Mesh(g, mat);
-                grid[y].push(m);
-
-                m.position.x = x - gridW / 2;
-                m.position.y = y - gridH / 2;
-                m.position.z = -5;
-                m.scale.x = 0.01;
-                m.scale.y = 0.01;
-                m.scale.z = 0.01;
-
-                scene.add(m);
-            }
-        }
-
-
-    });
 
     // timers and delta-time for the text streaking effect
     let timer = 0;
@@ -388,43 +171,8 @@ function main()
         // update the effect every 0.1 seconds
         if (timer > 0.1)
         {
-            for (var i = 0; i < gridH * gridW; i++)
-            {
-                let y = Math.floor(i / gridW);
-                if (grid[y] != undefined && grid[y][i%gridW] != undefined)
-                {
-                    // this effect is achieved by teleporting each character to a new location onto the grid
-                    // once a character is moved somewhere randomly on the grid, its color is set using a mathematical function which gives it the appearance of the colored streaks
-                    // intensity = max(1 - (input % 5) ^ 4 , 0)
-                    // this is a sawtooth like curve with a gap to simulate the black spacing between streaks
-                    // these constants could be changed to effect things like the length of streaks or the frequency they appear
-
-                    let letter = grid[y][i%gridW];
-                    letter.position.set(Math.floor(Math.random() * (gridW-1)) - gridW/2, Math.floor(Math.random() * (gridH - 1)) - gridH / 2, -5);
-                    let newX = Math.floor(letter.position.x + gridW/2);
-                    let newY = Math.floor(letter.position.y + gridH/2);
-
-                    // input into the intensity function
-                    let input = time + 0.1 * newY + offsets[newX];
-
-                    // funky math to get the streaking color as described above
-                    let intensity = Math.max(1 - Math.pow(input %= 5, 4), 0);
-                    letter.material.color.g = intensity;
-                    letter.material.color.r = 0.3 * Math.pow(intensity, 2);
-                    letter.material.color.b = 0.25 * letter.material.color.r;
-                }
-            }
             timer = 0;
         }
-
-        // rotate objects in the scene
-        cube.rotation.y = time;
-
-        const pathTime = 20.0;
-        let newPos = curve.getPoint((time % pathTime) / pathTime);
-        cube.position.x = newPos.x;
-        cube.position.y = newPos.y;
-        cube.position.z = newPos.z;
 
         if (controls.target != undefined)
         {
