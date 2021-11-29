@@ -51,6 +51,8 @@ function main()
         {
             if (selected == "red")
                 window.location.href = "http://localhost/rooftop.html";
+            else
+                window.location.href = "http://localhost/office.html";
         }
     }
   
