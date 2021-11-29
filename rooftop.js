@@ -62,24 +62,30 @@ function main()
     const texture = textureLoader.load( 'Smith.png' );
 
     // makes the Neo cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial();
-    material.color.set(0x63512D);
-    const cube = new THREE.Mesh( geometry, material );
-    cube.position.y = -10;
-    cube.position.z = 7.25;
-    cube.scale.x  = 7.5;
-    cube.scale.y  = 20;
-    cube.scale.z  = 15;
-    scene.add( cube );
+    //const geometry = new THREE.BoxGeometry();
+    //const material = new THREE.MeshBasicMaterial();
+    //material.color.set(0x63512D);
+    //const cube = new THREE.Mesh( geometry, material );
+
+    
+
+    // cube.position.y = -10;
+    // cube.position.z = 7.25;
+    // cube.scale.x  = 7.5;
+    // cube.scale.y  = 20;
+    // cube.scale.z  = 15;
+    // scene.add( cube );
 
     // adds a white point and ambient light to the scene to illuminate objects
     // The ambient light adds a small amount of ambient color to all the phong materials in the scene, providing some subtle background illumination
     const color = 0xFFFFFF;
-    const light = new THREE.AmbientLight(color, 0.1);
+    const light = new THREE.AmbientLight(color, 0.5);
     const light2 = new THREE.PointLight(0xFFFFFF, 0.7);
+    const light3 = new THREE.AmbientLight(color, 0.1);
     light2.position.y = 20;
     light2.position.z = 10;
+    light3.position.z = 30;
+    light2.position.y = 20;
     scene.add(light);
     scene.add(light2);
 
@@ -101,11 +107,28 @@ function main()
 
     let bp;
 
+    //loads building model
+    loader.load(
+        'building.gltf',
+        function (gltf) {
+            gltf.scene.position.z = 25;
+            gltf.scene.position.y = -20;
+            scene.add(gltf.scene);
+        },
+        function (xhr) {
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% of Neo loaded' );
+        },
+        function (error)
+        {
+            console.log(error);
+        }
+    )
+
     //loads Neo model
     loader.load(
         'neo.gltf',
         function (gltf) {
-            gltf.scene.position.z = 12.5;
+            gltf.scene.position.z = 37.5;
             gltf.scene.scale.z = -1;
 
             controls.target = gltf.scene.position;
@@ -125,7 +148,7 @@ function main()
     )
 
     let bullets = [];
-    const bulletCount = 100;
+    const bulletCount = 250;
     var row = 0;
     for(var x = 0; x < bulletCount; x++)
     {
@@ -133,9 +156,9 @@ function main()
         const material = new THREE.MeshPhongMaterial( {color: 0x555555 , specular: 0xFFFFFF, shininess: 100} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
-        cylinder.position.x = (Math.random()*6) - 3;
+        cylinder.position.x = (Math.random()*12) - 6;
         cylinder.position.y = 1 + (row%5)/5;
-        cylinder.position.z = (Math.random()*100)%20;
+        cylinder.position.z = Math.random()*38;
         cylinder.rotation.x = 90 * Math.PI / 180;
         row++;
         bullets.push(cylinder);
@@ -161,7 +184,7 @@ function main()
         const bulletSpeed = 2.5;
         for(var x = 0; x < bulletCount; x++) {
             bullets[x].position.z += bulletSpeed * animSpeed * dt;
-            bullets[x].position.z %= 17.5;
+            bullets[x].position.z %= 40;
         }
 
         // update the effect every 0.1 seconds
