@@ -69,9 +69,6 @@ function main()
     // Perspective based camera that applies perspective projections
     // This camera will apply a perspective projection with an fov of 75 degrees with near/far planes at 0.1 and 1000
     const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
-    let boxOrbit = false;
-    let mixer;
-    let animSpeed = 1.0;
 
     camera.position.z = 5;
 
@@ -118,64 +115,6 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
-    //creates center cube with multitexturing using cubemaps
-    loader.load(
-        // resource URL
-        'cube.gltf',
-        // called when the resource is loaded
-        function ( gltf ) {
-            let newCube = gltf.scene.getObjectByName("Cube");
-            //general vertex shader used in ShaderMaterial()
-            var vertShader = `
-            varying vec2 vUv;
-            void main()
-            {
-                vUv = uv;
-                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                gl_Position = projectionMatrix * mvPosition;
-            }
-            `;
-            //general fragment shader used in ShaderMaterial(), displays two textures at 50% opacity
-            var fragShader = `
-            uniform sampler2D tOne;
-            uniform sampler2D tSec;
-            
-            varying vec2 vUv;
-            
-            void main(void)
-            {
-                vec3 c;
-                vec4 Ca = texture2D(tOne, vUv);
-                vec4 Cb = texture2D(tSec, vUv);
-                c = Ca.rgb * Ca.a + Cb.rgb * Cb.a;  // blending equation
-                gl_FragColor= vec4(c, 1.0);
-            }`;
-            //textures to be included in ShaderMaterial()
-            var uniforms = {    // custom uniforms (your textures)
-                tOne: { type: "t", value: textureLoader.load( 'neoBox.png' ) },
-                tSec: { type: "t", value: textureLoader.load( 'smithBox.png' ) }
-            };
-            //create material for the incoming cube
-            var boxMaterial = new THREE.ShaderMaterial({
-                uniforms: uniforms,
-                vertexShader: vertShader,
-                fragmentShader: fragShader
-            });
-            //flip textures, apply created material to cube, add cube to scene
-            newCube.scale.y = -1;
-            newCube.material = boxMaterial;
-            scene.add(newCube);
-        },
-        // called while loading is progressing
-        function ( xhr ) {
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-        },
-        // called when loading has errors
-        function ( error ) {
-            console.log( 'An error happened' );
-        }
-    );
-
     // this hook up the buttons that toggle the camera controls
     document.querySelector("#fps").addEventListener("click", (event) => {
         // sets a first person camera control
@@ -194,70 +133,7 @@ function main()
         controls.update();
     });
 
-    document.querySelector("#box").addEventListener("click", (event) => {
-        //follows the box along the bezier curve
-        boxOrbit = !boxOrbit;
-    });
-
-    let playback = document.querySelector("#playback");
-    //slider to adjust animation speed for neo model
-    playback.oninput = () => {
-        console.log(playback.value);
-        animSpeed = playback.value;
-    };
-
-
-    let bp;
-
-    //create three curves using Bezier Curve function by passing in coordinates
-    let curve1 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( -10, 0, 2 ),
-        new THREE.Vector3( -5, 15, 1 ),
-        new THREE.Vector3( 20, 15, -1 ),
-        new THREE.Vector3( 10, 0, -3 )
-    );
-    let curve2 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( 10, 0, -3 ),
-        new THREE.Vector3( 5, 15, -5 ),
-        new THREE.Vector3( 20, 5, 4 ),
-        new THREE.Vector3( 4, 3, 3 )
-    );
-    let curve3 = new THREE.CubicBezierCurve3(
-        new THREE.Vector3( 4, 3, 3 ),
-        new THREE.Vector3( -5, 5, 2 ),
-        new THREE.Vector3( -15, 10, 1),
-        new THREE.Vector3( 0, 10, 0 )
-    );
-
-    //add all three curves to make a full bezier curve
-    let curve = new THREE.CurvePath();
-    curve.add(curve1);
-    curve.add(curve2);
-    curve.add(curve3);
-
-    //samples 50 points from the curve to create the mesh
-    const points = curve.getPoints( 50 );
-
-    //loads Neo model
-    loader.load(
-        'neo.gltf',
-        function (gltf) {
-            //when loading into the scene, lift neo up 1.5 units
-            gltf.scene.position.y += 1.5;
-            //add animations from .gltf files
-            mixer = new THREE.AnimationMixer(gltf.scene);
-            mixer.clipAction(gltf.animations[0]).play();
-            //add Neo to scene
-            scene.add(gltf.scene);
-        },
-        function (xhr) {
-            console.log( ( xhr.loaded / xhr.total * 100 ) + '% of Neo loaded' );
-        },
-        function (error)
-        {
-            console.log(error);
-        }
-    )
+    let bp, rp;
 
     // Load a glTF resource
     // Loads our gltf scene file (the hand and pill) and adds it into the scene
@@ -271,7 +147,7 @@ function main()
             gltf.scene.scale.set(20, 20, 20);
             gltf.scene.rotation.set(0.3, -Math.PI - 0.4, 0);
             gltf.scene.position.set(2, 0, 0);
-            let rp = gltf.scene.getObjectByName("Cylinder");
+            rp = gltf.scene.getObjectByName("Cylinder");
 
             // mirror the one hand we loaded and make its pill blue
 
@@ -281,7 +157,6 @@ function main()
             s2.rotation.y -= 0.8;
 
             let pill = s2.getObjectByName("Cylinder");
-            
             // here, we are making the clone of the red pill into a blue one, and we do this by updating the material (into a phong material with blue diffuse). 
             pill.material = new THREE.MeshPhongMaterial({ color: 0x0000FF });
             scene.add(s2);
@@ -290,16 +165,6 @@ function main()
             bp = pill;
             pills.push(rp);
             pills.push(bp);
-
-            
-            const curveGeometry = new THREE.BufferGeometry().setFromPoints( points );
-            
-            const curveMat = new THREE.LineBasicMaterial( { color : 0x00FF00 } );
-            
-            // Create the final object to add to the scene
-            const curveObject = new THREE.Line( curveGeometry, curveMat );
-
-            scene.add(curveObject);
         },
         // called while loading is progressing
         function ( xhr ) {
@@ -335,13 +200,6 @@ function main()
         // Since ThreeJS provides its own shaders and implements the Blinn-Phong model internally, our codebase at no point ever interfaces with the halfway vector or shaders in general, however the model internally uses it to approximate speculars 
         const mat = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, specular: 0xAAFFAA, shininess: 100 });
         let mesh = new THREE.Mesh(tg, mat);
-
-        // hooks up the button to toggle depth testing 
-        // This toggles the depth testing for the material of THE MATRIX logo. Disabling depth testing causes objects behind it to render in front of it and breaks the illusion of depth. 
-        // Internally, ThreeJS is using a depth / z buffer to do this depth testing, however we never need to interact with it directly, only request it be enabled or disabled
-        document.querySelector("#depth").addEventListener("click", (event) => {
-            mat.depthTest = !mat.depthTest;
-        });
 
         // some sizing stuff, it was WAAAY too big
 
@@ -448,28 +306,10 @@ function main()
             timer = 0;
         }
 
-        // rotate objects in the scene
-        cube.rotation.y = time;
-
-        const pathTime = 20.0;
-        let newPos = curve.getPoint((time % pathTime) / pathTime);
-        cube.position.x = newPos.x;
-        cube.position.y = newPos.y;
-        cube.position.z = newPos.z;
-
-        if (controls.target != undefined)
-        {
-            if (boxOrbit)
-                controls.target = cube.position.clone();
-            else
-                controls.target.set(0,0,0);
-        }
-
         if (bp != undefined)
             bp.rotation.y = time * 0.4;
-
-        if (mixer != undefined)
-            mixer.update(dt * animSpeed);
+        if (rp != undefined)
+            rp.rotation.y = time * 0.4;
 
         raycaster.setFromCamera(mousePos, camera);
 
