@@ -59,7 +59,7 @@ function main()
 
     // makes the Neo cube
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const material = new THREE.MeshPhongMaterial({ map: texture, specular: 0xFFFFFF, shininess: 50 });
     material.color.set(0x63512D);
     const cube = new THREE.Mesh( geometry, material );
 
@@ -86,6 +86,8 @@ function main()
         timer += dt;
         controls.update(dt);
 
+        cube.rotation.y += dt * 0.4;
+
         // update the effect every 0.1 seconds
         if (timer > 0.1)
         {
@@ -106,18 +108,20 @@ function main()
                 //add animations from .gltf files
                 scene.add(gltf.scene);
                 scene.add( cube );
+                cube.position.set(-3.8, 2.1, 4.3);
+                cube.scale.set(0.3, 0.3, 0.3);
                 // beings the render loop
 
                 console.log(scene);
                 
                 requestAnimationFrame(render);
 
-                    // Add shadows to all objects, including lights
+                // Add shadows to all objects, including lights
                 scene.traverse(function (obj) {
                     obj.castShadow = true
                     obj.receiveShadow = true
                     console.log('setting shadow to', obj)
-                })
+                });
             },
             function (xhr) {
                 console.log( ( xhr.loaded / xhr.total * 100 ) + '% of Neo loaded' );

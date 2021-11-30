@@ -131,7 +131,7 @@ function main()
             gltf.scene.position.z = 37.5;
             gltf.scene.scale.z = -1;
 
-            controls.target = gltf.scene.position;
+            controls.target = gltf.scene.position.clone();
             //add animations from .gltf files
             mixer = new THREE.AnimationMixer(gltf.scene);
             mixer.clipAction(gltf.animations[0]).play();
