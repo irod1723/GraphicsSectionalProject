@@ -17,7 +17,6 @@
 
 import * as THREE from './build/three.module.js';
 import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-import { FBXLoader } from './jsm/loaders/FBXLoader.js'
 import { OrbitControls } from './jsm/controls/OrbitControls.js';
 import { FontLoader } from './jsm/loaders/FontLoader.js';
 import { TextGeometry } from './jsm/geometries/TextGeometry.js';
@@ -45,6 +44,7 @@ function main()
         mousePos.y = -(event.clientY / canvas.height) * 2 + 1;
     }
 
+    // code to redirect the user on click
     function onClick(event)
     {
         if (selected != null)
@@ -55,7 +55,6 @@ function main()
                 window.location.href = "http://localhost/office.html";
         }
     }
-  
     canvas.addEventListener('mousemove', onMouseMove, false);
     canvas.addEventListener('click', onClick, false);
 
@@ -71,17 +70,6 @@ function main()
     const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
 
     camera.position.z = 5;
-
-    //let cubeLoader = new THREE.CubeTextureLoader();
-
-    // scene.background = cubeLoader.load([
-	// 	'neo.png',
-	// 	'neo.png',
-	// 	'neo.png',
-	// 	'Smith.png',
-	// 	'neo.png',
-	// 	'neo.png'
-	// ]);
 
     // the texture for the Neo cube
     let textureLoader = new THREE.TextureLoader();
@@ -306,22 +294,28 @@ function main()
             timer = 0;
         }
 
+        // rotation animation for the pills
         if (bp != undefined)
             bp.rotation.y = time * 0.4;
         if (rp != undefined)
             rp.rotation.y = time * 0.4;
 
+        // run the raycaster for object selection
         raycaster.setFromCamera(mousePos, camera);
 
+        // only check if the pills have loaded
         if (pills.length > 0)
         {
+            // intersection test
             const intersects = raycaster.intersectObjects(pills);
             
+            // reset size to normal every frame
             pills[0].scale.set(1, 1, 1);
             pills[1].scale.set(1, 1, 1);
             selected = null;
             for (let i = 0; i < intersects.length; i++)
             {
+                // logic to select the pill when hovered
                 if (intersects[i].object == pills[0])
                 {
                     selected = "red";
@@ -330,6 +324,7 @@ function main()
                 {
                     selected = "blue";
                 }
+                // make selected pill bigger
                 intersects[i].object.scale.set(3, 3, 3);
 
             }
