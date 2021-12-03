@@ -21,12 +21,9 @@ import { FirstPersonControls } from './jsm/controls/FirstPersonControls.js';
 
 window.onload = main;
 
-// Size of the procedural background grid
-const gridW = 50;
-const gridH = 50;
-
 function main()
 {
+    //creates a canvas to match the html page
     const canvas = document.querySelector("#c");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight * 0.8;
@@ -37,10 +34,6 @@ function main()
     renderer.physicallyCorrectLights = true;
 
     let scene = new THREE.Scene();
-
-    //const color = 0xFFFFFF;
-    //const light = new THREE.AmbientLight(color, 0.0);
-    // scene.add(light);
     
     // Perspective based camera that applies perspective projections
     // This camera will apply a perspective projection with an fov of 75 degrees with near/far planes at 0.1 and 1000
@@ -71,7 +64,6 @@ function main()
     const loader = new GLTFLoader();
 
     // timers and delta-time for the text streaking effect
-    let timer = 0;
     let lastTime = 0;
     let dt = 1.0 / 60.0;
     
@@ -83,16 +75,9 @@ function main()
         dt = time - lastTime;
         lastTime = time;
 
-        timer += dt;
         controls.update(dt);
 
         cube.rotation.y += dt * 0.4;
-
-        // update the effect every 0.1 seconds
-        if (timer > 0.1)
-        {
-            timer = 0;
-        }
 
         // render the scene
         renderer.render(scene, camera);

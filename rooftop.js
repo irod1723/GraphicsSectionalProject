@@ -21,12 +21,9 @@ import { OrbitControls } from './jsm/controls/OrbitControls.js';
 
 window.onload = main;
 
-// Size of the procedural background grid
-const gridW = 50;
-const gridH = 50;
-
 function main()
 {
+    //creates a canvas to match the html page
     const canvas = document.querySelector("#c");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight * 0.8;
@@ -44,37 +41,23 @@ function main()
     let mixer;
     let animSpeed = 1.0;
 
+    //set initial camera position
     camera.position.z = 5;
 
+    //creates skybox cube
     let cubeLoader = new THREE.CubeTextureLoader();
-
-     scene.background = cubeLoader.load([
-	 	'SkyRight.bmp',
-	 	'SkyLeft.bmp',
-	 	'SkyTop.bmp',
-	 	'SkyBottom.bmp',
-	 	'SkyFront.bmp',
-	 	'SkyBack.bmp'
+    scene.background = cubeLoader.load([
+	 	'SkyRight.png',
+	 	'SkyLeft.png',
+	 	'SkyTop.png',
+	 	'SkyBottom.png',
+	 	'SkyFront.png',
+	 	'SkyBack.png'
 	]);
 
     // the texture for the Neo cube
     let textureLoader = new THREE.TextureLoader();
     const texture = textureLoader.load( 'Smith.png' );
-
-    // makes the Neo cube
-    //const geometry = new THREE.BoxGeometry();
-    //const material = new THREE.MeshBasicMaterial();
-    //material.color.set(0x63512D);
-    //const cube = new THREE.Mesh( geometry, material );
-
-    
-
-    // cube.position.y = -10;
-    // cube.position.z = 7.25;
-    // cube.scale.x  = 7.5;
-    // cube.scale.y  = 20;
-    // cube.scale.z  = 15;
-    // scene.add( cube );
 
     // adds a white point and ambient light to the scene to illuminate objects
     // The ambient light adds a small amount of ambient color to all the phong materials in the scene, providing some subtle background illumination
@@ -88,6 +71,7 @@ function main()
     light2.position.y = 20;
     scene.add(light);
     scene.add(light2);
+    scene.add(light3);
 
     // sets up the camera to have orbiting controls to manipulate the scene, orbits the world origin
     let controls = new OrbitControls(camera, canvas);
@@ -147,25 +131,28 @@ function main()
         }
     )
 
+    //this section creates the bullet storm that neo is facing
     let bullets = [];
-    const bulletCount = 250;
-    var row = 0;
+    const bulletCount = 250; //number of bullets generated
+    var row = 0; //used for y placement
     for(var x = 0; x < bulletCount; x++)
     {
+        //create new bullet and add it to the scene
         const geometry = new THREE.CylinderGeometry(0.02, 0.03, 0.1, 8);
         const material = new THREE.MeshPhongMaterial( {color: 0x555555 , specular: 0xFFFFFF, shininess: 100} );
         const cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
-        cylinder.position.x = (Math.random()*12) - 6;
-        cylinder.position.y = 1 + (row%5)/5;
-        cylinder.position.z = Math.random()*38;
-        cylinder.rotation.x = 90 * Math.PI / 180;
+        //adjust the location in the scene
+        cylinder.position.x = (Math.random()*12) - 6; //random x location from [-6, 6]
+        cylinder.position.y = 1 + (row%5)/5; //rotates the y height of the bullet location
+        cylinder.position.z = Math.random()*38; //random z location from [0, 38]
+        cylinder.rotation.x = 90 * Math.PI / 180; //rotate the cylinder so it is facing horizontal towards Neo
         row++;
+        //add to bullets array
         bullets.push(cylinder);
     }
 
     // timers and delta-time for the text streaking effect
-    let timer = 0;
     let lastTime = 0;
     let dt = 1.0 / 60.0;
     
@@ -177,20 +164,13 @@ function main()
         dt = time - lastTime;
         lastTime = time;
 
-        timer += dt;
-
         controls.update(dt)
 
+        //updates the bullets every loop
         const bulletSpeed = 2.5;
         for(var x = 0; x < bulletCount; x++) {
             bullets[x].position.z += bulletSpeed * animSpeed * dt;
             bullets[x].position.z %= 40;
-        }
-
-        // update the effect every 0.1 seconds
-        if (timer > 0.1)
-        {
-            timer = 0;
         }
 
         if (bp != undefined)
