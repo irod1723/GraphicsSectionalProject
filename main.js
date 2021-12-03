@@ -1,5 +1,5 @@
 /* CIS 454 Group 6
- * Sectional project 3
+ * Final Project
  * main.js
  * contains all of our rendering code
  * utilizes the ThreeJS library for WebGL rendering
