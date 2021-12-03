@@ -38,6 +38,7 @@ function main()
     // Perspective based camera that applies perspective projections
     // This camera will apply a perspective projection with an fov of 75 degrees with near/far planes at 0.1 and 1000
     const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
+    //place camera in Neo's chair
     camera.position.set(0, 3.5, -3);
 
     // sets up the camera to have orbiting controls to manipulate the scene, orbits the world origin
@@ -93,9 +94,9 @@ function main()
                 //add animations from .gltf files
                 scene.add(gltf.scene);
                 scene.add( cube );
+                //place Neo cube on desk
                 cube.position.set(-3.8, 2.1, 4.3);
                 cube.scale.set(0.3, 0.3, 0.3);
-                // beings the render loop
 
                 console.log(scene);
                 
