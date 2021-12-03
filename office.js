@@ -1,7 +1,7 @@
 /* CIS 454 Group 6
  * Final Project
- * rooftop.js
- * contains all of our rendering code for the rooftop scene
+ * office.js
+ * contains all of our rendering code for the office scene
  * utilizes the ThreeJS library for WebGL rendering
  */
 
@@ -63,7 +63,7 @@ function main()
     // This object is used to load gltf / glb files
     const loader = new GLTFLoader();
 
-    // timers and delta-time for the text streaking effect
+    //delta-time for renderer frame-time stuff
     let lastTime = 0;
     let dt = 1.0 / 60.0;
     

@@ -37,7 +37,6 @@ function main()
     // Perspective based camera that applies perspective projections
     // This camera will apply a perspective projection with an fov of 75 degrees with near/far planes at 0.1 and 1000
     const camera = new THREE.PerspectiveCamera( 75, canvas.width / canvas.height, 0.1, 1000 );
-    let boxOrbit = false;
     let mixer;
     let animSpeed = 1.0;
 
@@ -152,7 +151,7 @@ function main()
         bullets.push(cylinder);
     }
 
-    // timers and delta-time for the text streaking effect
+    //delta-time for renderer frame-time stuff
     let lastTime = 0;
     let dt = 1.0 / 60.0;
     
